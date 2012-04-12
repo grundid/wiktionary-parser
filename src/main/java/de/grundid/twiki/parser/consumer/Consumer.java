@@ -1,4 +1,4 @@
-package de.grundid.twiki.parser;
+package de.grundid.twiki.parser.consumer;
 
 import java.util.concurrent.BlockingQueue;
 

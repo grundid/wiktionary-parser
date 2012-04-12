@@ -9,6 +9,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.helpers.DefaultHandler;
 
+import de.grundid.twiki.parser.consumer.Consumer;
+
 public class ImportHandler<T> implements Runnable {
 
 	private int defaultQueueSize = 20000;

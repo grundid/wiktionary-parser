@@ -1,40 +1,13 @@
 package de.grundid.twiki.parser;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Collection;
-
 import org.junit.Test;
+
+import de.grundid.twiki.parser.consumer.SimpleFilterConsumer;
 
 public class SimpleImportTest {
 
 	private static final String[] files = { "c:\\tmp\\dewiktionary-20120225-pages-articles.xml",
 			"c:\\tmp\\enwiktionary-20120406-pages-articles.xml" };
-
-	private void writeWords(String file, Collection<String> words) {
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(new File(file + ".txt"));
-			for (String word : words) {
-				fw.write(word);
-				fw.write('\n');
-			}
-		}
-		catch (IOException e) {
-		}
-		finally {
-			if (fw != null) {
-				try {
-					fw.flush();
-					fw.close();
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 
 	@Test
 	public void testImport() throws Exception {
@@ -43,7 +16,7 @@ public class SimpleImportTest {
 		SimpleImporter importer = new SimpleImporter();
 		ImportHandler<WiktionaryEntry> handler = new ImportHandler<WiktionaryEntry>();
 
-		WiktionaryImporter de = processFile(importer, handler, files[0]);
+		WiktionaryImporter de = processFile(importer, handler, files[0], "de");
 		//		WiktionaryImporter en = processFile(importer, handler, files[1]);
 		//		System.out.println("DE before: " + de.getWordsCount());
 		//		de.getWords().removeAll(en.getWords());
@@ -52,20 +25,19 @@ public class SimpleImportTest {
 		System.out.println("Time: " + (System.currentTimeMillis() - time) + " ms");
 	}
 
-	private WiktionaryImporter processFile(SimpleImporter importer, ImportHandler<WiktionaryEntry> handler, String file) {
+	private WiktionaryImporter processFile(SimpleImporter importer, ImportHandler<WiktionaryEntry> handler,
+			String file, String source) {
 		WiktionaryImporter wiktionaryImporter = new WiktionaryImporter();
 
+		SimpleFilterConsumer consumer = new SimpleFilterConsumer();
+		for (String part : WiktionaryData.partsOfSpeech)
+			consumer.addPattern("{{Wortart|" + part + "|Deutsch");
+
 		handler.setProducer(wiktionaryImporter);
-		handler.setConsumer(new Consumer<WiktionaryEntry>() {
-
-			@Override
-			protected void consume(WiktionaryEntry element) {
-				//				System.out.println("[" + element.getTitle() + "]");
-			}
-		});
-
+		handler.setConsumer(consumer);
 		importer.run(file, handler);
 
+		consumer.outputMatches();
 		return wiktionaryImporter;
 	}
 }
