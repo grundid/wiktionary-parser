@@ -11,9 +11,14 @@ public class SimpleFilterConsumer extends Consumer<WiktionaryEntry> {
 
 	private Map<String, Map<String, Integer>> matches = new TreeMap<String, Map<String, Integer>>();
 	private int total;
+	private String replacePattern;
 
 	public void addPattern(String pattern) {
 		matches.put(pattern, new TreeMap<String, Integer>());
+	}
+
+	public void setReplacePattern(String replacePattern) {
+		this.replacePattern = replacePattern;
 	}
 
 	@Override
@@ -30,7 +35,12 @@ public class SimpleFilterConsumer extends Consumer<WiktionaryEntry> {
 			int pos = text.indexOf(pattern);
 			if (pos >= 0) {
 				int endOfLine = text.indexOf("\n", pos);
-				String match = text.substring(pos, endOfLine).replaceAll(" |'|,|=|/", "");
+				if (endOfLine < 0)
+					endOfLine = text.length() - 1;
+				String match = text.substring(pos, endOfLine);
+				if (replacePattern != null)
+					match.replaceAll(replacePattern, "");
+
 				incMatch(match, subMatches);
 
 				//				String[] split = match.split("\\||}");
@@ -49,7 +59,8 @@ public class SimpleFilterConsumer extends Consumer<WiktionaryEntry> {
 		total++;
 	}
 
-	public void outputMatches() {
+	@Override
+	protected void finishConsuming() {
 
 		for (Entry<String, Map<String, Integer>> entry : matches.entrySet()) {
 			for (Entry<String, Integer> subEntry : entry.getValue().entrySet()) {

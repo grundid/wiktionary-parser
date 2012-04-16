@@ -23,17 +23,19 @@ public class WiktionaryData {
 			"KontraktionausPräpositionundArtikel", "ReflexivesPossessivpronomen", "Reziprokpronomen",
 			"Singularetantum", "Suffixoid", "Zahladjektiv", "Zahlklassifikator" };
 
+	public static Set<String> structurePrefixes = new HashSet<String>();
+
 	public static Set<String> ignorePrefixes = new HashSet<String>();
 	static {
 		ignorePrefixes.add("MediaWiki:");
 		ignorePrefixes.add("Wiktionary:");
-
 		ignorePrefixes.add("Datei:");
 		ignorePrefixes.add("Hilfe:");
 		ignorePrefixes.add("Vorlage:");
-		ignorePrefixes.add("Kategorie:");
-		ignorePrefixes.add("Thesaurus:");
-		ignorePrefixes.add("Verzeichnis:");
+
+		structurePrefixes.add("Kategorie:");
+		structurePrefixes.add("Thesaurus:");
+		structurePrefixes.add("Verzeichnis:");
 
 		ignorePrefixes.add("Appendix:");
 		ignorePrefixes.add("Category:");

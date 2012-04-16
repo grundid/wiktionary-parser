@@ -16,7 +16,7 @@ public class ImportHandler<T> implements Runnable {
 	private int defaultQueueSize = 20000;
 	private InputStream inputStream;
 	private Consumer<T> consumer;
-	private OsmDefaultHandler<T> producer;
+	private BlockingQueueDefaultHandler<T> producer;
 
 	public void setInputStream(InputStream inputStream) {
 		this.inputStream = inputStream;
@@ -26,7 +26,7 @@ public class ImportHandler<T> implements Runnable {
 		this.consumer = consumer;
 	}
 
-	public void setProducer(OsmDefaultHandler<T> producer) {
+	public void setProducer(BlockingQueueDefaultHandler<T> producer) {
 		this.producer = producer;
 	}
 

@@ -4,7 +4,7 @@ import java.util.concurrent.BlockingQueue;
 
 import org.xml.sax.ext.DefaultHandler2;
 
-public class OsmDefaultHandler<T> extends DefaultHandler2 {
+public class BlockingQueueDefaultHandler<T> extends DefaultHandler2 {
 
 	protected BlockingQueue<T> queue;
 

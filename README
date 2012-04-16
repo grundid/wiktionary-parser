@@ -1,0 +1,18 @@
+== Wiktionary Parser ==
+
+This project has the intent to parse the English and German (over time maybe others) wiktionary databases 
+and convert them into a machine readable format (database).
+
+This database should allow to answer the following (and more) questions:
+
+- give me all the words for a given category (for example "food") in English and German
+
+- given the following words in English/German, give me all the translated 
+German/English words and their pluralizations in English and German in an XML format 
+readable by the Android Developer Kit
+
+- give me a list of possible words I can enter based on the current structure of 
+the sentence (noun, verb, adjective and so on)
+
+- export the complete database of all known words into a machine readable format like JSON or XML 
+or a binary format optimized for reading from flash memory

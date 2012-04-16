@@ -2,7 +2,10 @@ package de.grundid.twiki.parser;
 
 import org.junit.Test;
 
+import de.grundid.twiki.parser.consumer.Consumer;
+import de.grundid.twiki.parser.consumer.InternalLinkConsumer;
 import de.grundid.twiki.parser.consumer.SimpleFilterConsumer;
+import de.grundid.twiki.parser.consumer.SortedFileWriterConsumer;
 
 public class SimpleImportTest {
 
@@ -13,10 +16,10 @@ public class SimpleImportTest {
 	public void testImport() throws Exception {
 
 		long time = System.currentTimeMillis();
-		SimpleImporter importer = new SimpleImporter();
-		ImportHandler<WiktionaryEntry> handler = new ImportHandler<WiktionaryEntry>();
 
-		WiktionaryImporter de = processFile(importer, handler, files[0], "de");
+		//		processFile(createSortedFileWriterConsumer(files[0]), files[0], "de");
+		processFile(createInternalLinkConsumer(files[0]), files[0], "de");
+
 		//		WiktionaryImporter en = processFile(importer, handler, files[1]);
 		//		System.out.println("DE before: " + de.getWordsCount());
 		//		de.getWords().removeAll(en.getWords());
@@ -25,19 +28,39 @@ public class SimpleImportTest {
 		System.out.println("Time: " + (System.currentTimeMillis() - time) + " ms");
 	}
 
-	private WiktionaryImporter processFile(SimpleImporter importer, ImportHandler<WiktionaryEntry> handler,
-			String file, String source) {
-		WiktionaryImporter wiktionaryImporter = new WiktionaryImporter();
-
+	private SimpleFilterConsumer createSimpleFilterConsumer() {
 		SimpleFilterConsumer consumer = new SimpleFilterConsumer();
-		for (String part : WiktionaryData.partsOfSpeech)
-			consumer.addPattern("{{Wortart|" + part + "|Deutsch");
+		//		consumer.setReplacePattern(" |'|,|=|/");
+		consumer.addPattern("= Übersetzungen =");
+
+		//		for (String part : WiktionaryData.partsOfSpeech)
+		//		{
+		//			consumer.addPattern("{{Wortart|" + part + "|Deutsch");
+		//		}
+		return consumer;
+	}
+
+	private SortedFileWriterConsumer createSortedFileWriterConsumer(String file) {
+		SortedFileWriterConsumer consumer = new SortedFileWriterConsumer();
+		consumer.setOutputFile(file);
+		return consumer;
+	}
+
+	private InternalLinkConsumer createInternalLinkConsumer(String file) {
+		InternalLinkConsumer consumer = new InternalLinkConsumer();
+		consumer.setOutputFile(file);
+		return consumer;
+	}
+
+	private WiktionaryImporter processFile(Consumer<WiktionaryEntry> consumer, String file, String source) {
+		SimpleImporter importer = new SimpleImporter();
+		ImportHandler<WiktionaryEntry> handler = new ImportHandler<WiktionaryEntry>();
+		WiktionaryImporter wiktionaryImporter = new WiktionaryImporter();
 
 		handler.setProducer(wiktionaryImporter);
 		handler.setConsumer(consumer);
 		importer.run(file, handler);
 
-		consumer.outputMatches();
 		return wiktionaryImporter;
 	}
 }

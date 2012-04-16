@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public class WiktionaryImporter extends OsmDefaultHandler<WiktionaryEntry> {
+public class WiktionaryImporter extends BlockingQueueDefaultHandler<WiktionaryEntry> {
 
 	private WiktionaryEntry entry;
 
